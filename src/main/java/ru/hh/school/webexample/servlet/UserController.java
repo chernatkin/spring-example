@@ -5,6 +5,7 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,13 +25,18 @@ public class UserController {
 	@RequestMapping(value = "get", method = RequestMethod.GET)
 	@ResponseBody
 	public String getUser(@RequestParam(value = "id", required = true) final String id) throws HibernateException{
+		if(!StringUtils.hasText(id)){ throw new IllegalArgumentException("Parameter {id} must not be empty"); }
+		
 		return userService.get(Long.parseLong(id)).toString();
 	}
 	
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(NumberFormatException.class)
-	public void badRequest(){ }
+	@ExceptionHandler({NumberFormatException.class, IllegalArgumentException.class})
+	@ResponseBody
+	public String badRequest(Exception e){
+		return e.getMessage();
+	}
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(ObjectNotFoundException.class)
