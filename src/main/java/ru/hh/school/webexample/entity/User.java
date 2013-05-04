@@ -9,6 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 @Table(name="user")
 public class User {
@@ -29,10 +32,23 @@ public class User {
 
 	@ManyToOne
 	@JoinColumn(name = "dept_id")
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private Department dept;
+	
 	
 	public Long getId() {
 		return id;
+	}
+
+	public User() {
+		
+	}
+	
+	public User(Long id, String firstName, String middleName, String lastName) {
+		this.id = id;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
 	}
 
 	public void setId(Long id) {
