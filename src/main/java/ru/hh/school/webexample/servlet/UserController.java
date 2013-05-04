@@ -44,7 +44,7 @@ public class UserController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public String getUser(@RequestParam(value = "id", required = true) final String id) throws HibernateException, ObjectNotFoundException, JsonProcessingException{
+	public String getUser(@RequestParam(value = "id") final String id) throws HibernateException, ObjectNotFoundException, JsonProcessingException{
 		if(!StringUtils.hasText(id)){ throw new IllegalArgumentException("Parameter {id} must not be empty"); }
 		
 		return objectMapper.writeValueAsString(userService.get(Long.parseLong(id)));
@@ -52,10 +52,13 @@ public class UserController {
 	
 	@RequestMapping(method = RequestMethod.PUT, produces="application/json")
 	@ResponseBody
-	public String setUser(@RequestParam(value = "firstName", required = true) final String firstName,
-						@RequestParam(value = "middleName", required = true) final String middleName,
-						@RequestParam(value = "lastName", required = true) final String lastName) throws HibernateException, JsonProcessingException{
-		return objectMapper.writeValueAsString(userService.save(new User(null, firstName, middleName, lastName)));
+	public String setUser(@RequestParam(value = "firstName", required = false) final String firstName,
+						@RequestParam(value = "middleName", required = false) final String middleName,
+						@RequestParam(value = "lastName") final String lastName) throws HibernateException, JsonProcessingException{
+		
+		final User user = new User(null, firstName, middleName, lastName);
+		userService.save(user);
+		return objectMapper.writeValueAsString(user);
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -1,7 +1,71 @@
 <html>
-<head></head>
+<head>
+	<script type="text/javascript" src="/spring-example/jquery2.js"></script>
+</head>
 <body>
-<h1>Hello!</h1>
+	<script type="text/javascript">
+		function sendRequest(url, method, data){
+	    	$.ajax({
+	    		  url: url,
+	    		  type: method,
+	    		  data: data,
+	    		  success: function(json) {
+	    			$('#result-area').val(json);
+	    		  },
+	    		  error: function(jqXHR, textStatus, errorThrown) {
+		    		$('#result-area').val(errorThrown);
+		    	  }
+	    		});
+	    }
+		
+		$(document).ready(function(){
+		    $('#get-submit').click(function(){
+		    	sendRequest($('#url-input').val(), $('#get-submit').val(), $('#data-input').val());
+		    });
+		});
 
+		$(document).ready(function(){
+		    $('#post-submit').click(function(){
+		    	sendRequest($('#url-input').val(), $('#post-submit').val(), $('#data-input').val());
+		    });
+		});
+		
+		$(document).ready(function(){
+		    $('#put-submit').click(function(){
+		    	sendRequest($('#url-input').val(), $('#put-submit').val(), $('#data-input').val());
+		    });
+		});
+		
+		$(document).ready(function(){
+		    $('#delete-submit').click(function(){
+		    	sendRequest($('#url-input').val(), $('#delete-submit').val(), $('#data-input').val());
+		    });
+		});
+	</script>
+
+	<h1>REST service page!</h1>
+	<table>
+		<tr>
+			<td style="width: 50px; font-weight: bold">URL:</td>
+			<td><input id="url-input" type="text" autocomplete="on" style="width: 600px"/></td>
+		</tr>
+		<tr>
+			<td style="width: 50px; font-weight: bold">Data:</td>
+			<td><input id="data-input" type="text" autocomplete="on" style="width: 600px"/></td>
+		</tr>
+		<tr>
+			<td style="width: 50px"></td>
+			<td style="text-align: right">
+				<input id="get-submit" type="submit" value="GET"/>
+				<input id="post-submit" type="submit" value="POST"/>
+				<input id="put-submit" type="submit" value="PUT"/>
+				<input id="delete-submit" type="submit" value="DELETE"/>
+			</td>
+		</tr>
+	</table>
+	
+	<br/>
+	
+	<textarea id="result-area" rows="10" style="width: 660px"></textarea>
 </body>
 </html>
