@@ -32,13 +32,14 @@ public class UserControllerTest {
 	
 	@Test
     public void userGetByIdTest() throws NumberFormatException, HibernateException, IOException {
-		final Long ID = 1L;
-		final String userJson = userController.getUser(ID.toString());
+		final User savedUser = objectMapper.readValue(userController.setUser("abcd", "hyt", "gnb"), User.class);
+		
+		final String userJson = userController.getUser(savedUser.getId().toString());
 		Assert.assertNotNull(userJson);
 		
 		final User user = objectMapper.readValue(userJson, User.class);
 		Assert.assertNotNull(user);
-		Assert.assertEquals(ID, user.getId());
+		Assert.assertEquals(savedUser.getId(), user.getId());
     }
 	
 	@Test(expected = ObjectNotFoundException.class)
